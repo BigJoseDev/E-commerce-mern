@@ -13,7 +13,7 @@ const Navbar = () => {
 
         <div className="nav-logo">
             <img src={logo} alt="logo" />
-            <p>MiBags.ng</p>
+            <p>JBags.ng</p>
         </div>
 
         <ul className="nav-menu">
