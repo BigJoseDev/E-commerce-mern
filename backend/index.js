@@ -1,5 +1,7 @@
 // define port
 const port = 4000;
+// initialize env package
+require("dotenv").config();
 // import express
 const express = require("express");
 // create app instance
@@ -21,7 +23,8 @@ app.use(express.json());
 app.use(cors());
 
 // connect to mongodb
-mongoose.connect("mongodb+srv://aliemhejosemaria:124698763Jayhood@cluster0.80zvetz.mongodb.net/e-commerce")
+
+mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     console.log("successfully connected to the database")
 })
