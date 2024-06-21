@@ -16,6 +16,7 @@ const multer = require ("multer")
 const path = require ("path")
 // initialize cors package
 const cors = require ("cors");
+const { log } = require("console");
 
 // middleware to parse json bodies
 app.use(express.json());
@@ -56,7 +57,7 @@ app.post("/upload", upload.single('product'), (req,res)=>{
 
 // Schema for products
 
-const Product = mongoose.model("Product",{
+const Product = mongoose.model("product",{
     id:{
         type: Number,
         required: true,
@@ -77,7 +78,7 @@ const Product = mongoose.model("Product",{
         type: Number,
         required: true,
     },
-    all_price:{
+    old_price:{
         type: Number,
         required: true,
     },
@@ -92,6 +93,54 @@ const Product = mongoose.model("Product",{
 })
 
 
+app.post('/addproduct', async (req, res)=>{
+    let products = await Product.find({});
+    let id;
+    if(products.length>0){
+        let last_product_array = products.slice(-1);
+        let last_product = last_product_array[0];
+        id = last_product.id + 1;
+    }
+    else{
+        id = 1;
+    }
+
+    const product = new Product({
+        id: id,
+        name: req.body.name,
+        image: req.body.image,
+        category: req.body.category,
+        new_price: req.body.new_price,
+        old_price: req.body.old_price,
+       
+    });
+    console.log(product);
+    await product.save() 
+    console.log("Product added successfully")
+    res.json({
+        success: true,
+        name: req.body.name,
+    })
+})
+
+// create Api for deleting product
+
+app.post('/removeproduct', async (req,res)=>{
+    await Product.findOneAndDelete({id: req.body.id});
+    console.log("Product removed successfully");
+    res.json({
+        success: true,
+        name: req.body.name
+    })
+
+})
+
+// Api for getting all products
+app.get('/allproducts', async (req,res)=>{
+let products = await Product.find({})
+console.log("all products fetched successfully")
+res.send(products);
+})
 
 
 
